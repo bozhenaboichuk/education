@@ -1,0 +1,10 @@
+apple red
+banana yellow
+orange orange
+strawberry red
+blueberry blue
+raspberry red
+kiwi green
+watermelon green
+grape purple
+lemon yellow
