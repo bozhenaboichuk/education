@@ -1,39 +1,40 @@
-source_code = File.read(__FILE__)
+class PolishCalculator
+  def calculate(expression)
+    stack = []
+    results = []
+    expression.split.each do |token|
+      case token
+      when '*', '/'
+        operand2 = stack.pop
+        operand1 = stack.pop
+        case token
+        when '*'
+          result = operand1.to_f * operand2.to_f
+        when '/'
+          result = operand1.to_f / operand2.to_f
+        end
+        stack.push(result)
+        results.push(result)
+      else
+        if token.to_f.zero?
+          puts "Неправильний формат виразу: #{token}"
+        else
+          stack.push(token.to_f)
+        end
+      end
+    end
 
-def condition
-  if x > 5
-    puts "x is greater than 5"
-  else
-    puts "x is less than or equal to 5"
+    return results
+  end
+
+  def run(input_file)
+    expression = File.read(input_file)
+
+    results = calculate(expression)
+
+    File.write('output.res', results.join("\n"))
   end
 end
 
-def condition_2
-  if x < 5
-    puts "x is less than or equal to 5"
-  else
-    puts "x is greater than 5"
-  end
-end
-
-modified_code = source_code.gsub(/if\s+(.+?)\s+[\n\s]+(.+?)\s+[\n\s]+else\s+[\n\s]+(.+?)\s+[\n\s]+end/m) do |match|
-  condition = Regexp.last_match(1)
-  if_branch = Regexp.last_match(2)
-  else_branch = Regexp.last_match(3)
-  "unless #{condition}\n    #{else_branch}\n  else\n    #{if_branch}\n  end"
-end
-
-
-File.open('modified_code.txt', 'w') { |file| file.write(modified_code) }
-
-File.open('modified_code.txt', 'r+') do |f|
-  lines = f.readlines
-
-  lines.slice!(0, 2)
-  lines.slice!(-21, 21)
-
-  f.rewind
-  f.truncate(0)
-
-  f.write(lines.join)
-end
+calculator = PolishCalculator.new
+calculator.run('input.txt')
